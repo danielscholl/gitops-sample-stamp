@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+    toolkit.fluxcd.io/tenant: sample-stamp
+  name: sample-stamp
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    istio-injection: enabled
+    toolkit.fluxcd.io/tenant: sample-stamp
+  name: sample-stamp
+  namespace: sample-stamp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    istio-injection: enabled
+    toolkit.fluxcd.io/tenant: sample-stamp
+  name: sample-stamp-reconciler
+  namespace: sample-stamp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: gotk:sample-stamp:reconciler
+- kind: ServiceAccount
+  name: sample-stamp
+  namespace: sample-stamp
