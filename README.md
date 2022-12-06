@@ -41,6 +41,8 @@ kind create cluster --name $CLUSTER_NAME
 az connectedk8s connect -n $CLUSTER_NAME -g $RESOURCE_GROUP
 
 # Deploy Sample Stamp
+az k8s-extension create --extension-type microsoft.flux --configuration-settings multiTenancy.enforce=false -c $CLUSTER_NAME -g $RESOURCE_GROUP -n flux -t connectedClusters
+
 az k8s-configuration flux create --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME --cluster-type connectedClusters \
     --name sample-stamp --scope cluster --namespace flux-system \
