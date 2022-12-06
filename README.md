@@ -27,22 +27,24 @@ To make things easy for the purpose of simple validations a `kind` kubernetes cl
 [KinD like AKS](https://www.danielstechblog.io/local-kubernetes-setup-with-kind/)
 
 ```bash
-RESOURCE_GROUP="sample-stamp"
-LOCATION="eastus"
+# Using kind create a Kubernetes Cluster
+CLUSTER_NAME="cluster"
+kind create cluster --name $CLUSTER_NAME
 
 # Create a Resource Group
+RESOURCE_GROUP="sample-stamp"
+LOCATION="eastus"
 az group create -n $RESOURCE_GROUP -l $LOCATION
-
-# Using kind create a Kubernetes Cluster
-CLUSTER_NAME="sample-stamp-cluster"
-kind create cluster --name $CLUSTER_NAME
 
 # Arc enable the Kubernetes Cluster
 az connectedk8s connect -n $CLUSTER_NAME -g $RESOURCE_GROUP
 
-# Deploy Sample Stamp
-az k8s-extension create --extension-type microsoft.flux --configuration-settings multiTenancy.enforce=false -c $CLUSTER_NAME -g $RESOURCE_GROUP -n flux -t connectedClusters
+# Configure Flux Extension
+az k8s-extension create --name flux --extension-type microsoft.flux --configuration-settings multiTenancy.enforce=false \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME --cluster-type connectedClusters
 
+# Deploy Sample Stamp
 az k8s-configuration flux create --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME --cluster-type connectedClusters \
     --name sample-stamp --scope cluster --namespace flux-system \
