@@ -28,7 +28,7 @@ To make things easy for the purpose of simple validations a `kind` kubernetes cl
 
 ```bash
 # Using kind create a Kubernetes Cluster
-CLUSTER_NAME="cluster"
+CLUSTER_NAME="kind-cluster"
 kind create cluster --name $CLUSTER_NAME
 
 # Create a Resource Group
