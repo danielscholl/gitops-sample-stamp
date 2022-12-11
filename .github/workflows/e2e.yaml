@@ -35,8 +35,6 @@ jobs:
           ref:
             branch: ${GITHUB_REF#refs/heads/}
           url: ${{ github.event.repository.html_url }}
-          ignore: |
-            /clusters/sample-stamp/tenants.yaml
         EOF
 
         kubectl apply -f - <<EOF > cat
@@ -50,14 +48,14 @@ jobs:
           ref:
             branch: ${GITHUB_REF#refs/heads/}
           url: ${{ github.event.repository.html_url }}
-          ignore: |
-            /clusters/sample-stamp/tenants.yaml
+          # ignore: |
+          #   /clusters/sample-stamp/tenants.yaml
         EOF
-
-        flux get sources git -A
 
         kubectl -n flux-system wait gitrepository/flux-system --for=condition=ready --timeout=1m
         kubectl -n flux-system wait gitrepository/sample-stamp --for=condition=ready --timeout=1m
+
+        flux get sources git -A
 
         flux create kustomization sample-stamp \
         --interval=15m \
