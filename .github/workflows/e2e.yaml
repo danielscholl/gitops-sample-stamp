@@ -28,6 +28,21 @@ jobs:
         apiVersion: source.toolkit.fluxcd.io/v1beta2
         kind: GitRepository
         metadata:
+          name: flux-system
+          namespace: flux-system
+        spec:
+          interval: 15m
+          ref:
+            branch: ${GITHUB_REF#refs/heads/}
+          url: ${{ github.event.repository.html_url }}
+          ignore: |
+            /clusters/sample-stamp/tenants.yaml
+        EOF
+
+        kubectl apply -f - <<EOF > cat
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: GitRepository
+        metadata:
           name: sample-stamp
           namespace: flux-system
         spec:
@@ -40,6 +55,7 @@ jobs:
         EOF
 
         kubectl -n flux-system wait gitrepository/flux-system --for=condition=ready --timeout=1m
+        kubectl -n flux-system wait gitrepository/sample-stamp --for=condition=ready --timeout=1m
 
         flux create kustomization sample-stamp \
         --interval=15m \
@@ -57,6 +73,8 @@ jobs:
     - name: Debug failure
       if: failure()
       run: |
+        flux get sources all --all-namespaces
+        flux get ks --all-namespaces
         kubectl -n flux-system get all
         kubectl -n flux-system logs deploy/source-controller
         kubectl -n flux-system logs deploy/kustomize-controller
@@ -65,5 +83,4 @@ jobs:
         kubectl -n cert-manager get all
         kubectl -n istio-system get all
         kubectl -n sample-stamp get all
-        flux get sources all --all-namespaces
-        flux get ks --all-namespaces
+        
