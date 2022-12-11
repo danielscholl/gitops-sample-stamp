@@ -4,7 +4,7 @@ set -eu
 
 YQ_VERSION="4.30.5"
 KUSTOMIZE_VERSION="4.5.7"
-KUBEVAL_VERSION="0.5.0"
+KUBECONFORM_VERSION="0.5.0"
 
 mkdir -p $GITHUB_WORKSPACE/bin
 
@@ -20,7 +20,7 @@ tar xz
 cp ./kustomize $GITHUB_WORKSPACE/bin
 chmod +x $GITHUB_WORKSPACE/bin/kustomize
 
-curl -sL https://github.com/instrumenta/yannh/kubeconform/download/v${KUBEVAL_VERSION}/kubeconform-linux-amd64.tar.gz | \
+curl -sL https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz | \
 tar xz
 
 cp ./kubeconform $GITHUB_WORKSPACE/bin
