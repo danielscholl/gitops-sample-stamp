@@ -223,4 +223,7 @@ wget -q  ${kubeconform_url}/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.
 tar -zxvf kubeconform_v${KUBECONFORM_VERSION}_linux_amd64.tar.gz -C /usr/local/bin kubeconform
 echo "The kubeconform command line tool is installed... Done."
 
+echo "================================================================================="
+echo "Installing kubectl command."
+az aks install-cli
 echo "Done!"
