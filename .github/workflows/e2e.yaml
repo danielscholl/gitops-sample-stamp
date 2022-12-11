@@ -22,34 +22,24 @@ jobs:
     - name: Install Flux in Kubernetes Kind
       run: flux install --log-level debug
 
+    - name: Setup cluster reconciliation
+      run: |
+        kubectl apply -f - <<EOF > cat
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: GitRepository
+        metadata:
+          name: flux-system
+          namespace: flux-system
+        spec:
+          interval: 15m
+          ref:
+            branch: ${GITHUB_REF#refs/heads/}
+          url: ${{ github.event.repository.html_url }}
+          ignore: |
+            /clusters/sample-stamp/tenants.yaml
+        EOF
 
-
-    # - name: Setup Kubernetes
-    #   uses: engineerd/setup-kind@v0.5.0
-    #   with:
-    #     version: v0.11.1
-    #     image: kindest/node:v1.25.2@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
-
-
-
-    # - name: Setup cluster reconciliation
-    #   run: |
-    #     kubectl apply -f - <<EOF > cat
-    #     apiVersion: source.toolkit.fluxcd.io/v1beta2
-    #     kind: GitRepository
-    #     metadata:
-    #       name: flux-system
-    #       namespace: flux-system
-    #     spec:
-    #       interval: 15m
-    #       ref:
-    #         branch: ${GITHUB_REF#refs/heads/}
-    #       url: ${{ github.event.repository.html_url }}
-    #       ignore: |
-    #         /clusters/sample-stamp/tenants.yaml
-    #     EOF
-
-    #     kubectl -n flux-system wait gitrepository/flux-system --for=condition=ready --timeout=1m
+        kubectl -n flux-system wait gitrepository/flux-system --for=condition=ready --timeout=1m
 
     #     flux create kustomization flux-system \
     #     --interval=15m \
