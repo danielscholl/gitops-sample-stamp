@@ -2,6 +2,9 @@
 
 set -o errexit
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PARENT_DIR=`dirname $SCRIPT_DIR`
+
 echo "INFO - Downloading Flux OpenAPI schemas"
 mkdir -p /tmp/flux-crd-schemas/master-standalone-strict
 curl -sL https://github.com/fluxcd/flux2/releases/latest/download/crd-schemas.tar.gz | tar zxf - -C /tmp/flux-crd-schemas/master-standalone-strict
@@ -15,7 +18,7 @@ done
 kubeconform_config=( "-strict" "-ignore-missing-schemas" "-schema-location" "default" "-schema-location" "/tmp/flux-crd-schemas" "-verbose")
 
 echo "INFO - Validating clusters"
-find ./clusters -maxdepth 2 -type f -name '*.yaml' -print0 | while IFS= read -r -d $'\0' file;
+find $PARENT_DIR/clusters -maxdepth 2 -type f -name '*.yaml' -print0 | while IFS= read -r -d $'\0' file;
   do
     kubeconform "${kubeconform_config[@]}" "${file}"
     if [[ ${PIPESTATUS[0]} != 0 ]]; then

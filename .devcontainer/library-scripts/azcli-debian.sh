@@ -198,4 +198,29 @@ echo "Installing flux command."
 curl -s https://fluxcd.io/install.sh | bash;
 echo "The flux command line tool is installed... Done."
 
+YQ_VERSION="4.30.5"
+echo "================================================================================="
+echo "Installing yq command."
+curl -sL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 -o /usr/local/bin/yq
+chmod +x /usr/local/bin/yq
+echo "The yq command line tool is installed... Done."
+
+
+KUSTOMIZE_VERSION="4.5.7"
+echo "================================================================================="
+echo "Installing kustomize command."
+kustomize_url=https://github.com/kubernetes-sigs/kustomize/releases/download && \
+wget -q  ${kustomize_url}/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz  -O kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz
+tar -zxvf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz -C /usr/local/bin
+echo "The kustomize command line tool is installed... Done."
+
+
+KUBECONFORM_VERSION="0.5.0"
+echo "================================================================================="
+echo "Installing kubeconform command."
+kubeconform_url=https://github.com/yannh/kubeconform/releases/download && \
+wget -q  ${kubeconform_url}/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz  -O kubeconform_v${KUBECONFORM_VERSION}_linux_amd64.tar.gz
+tar -zxvf kubeconform_v${KUBECONFORM_VERSION}_linux_amd64.tar.gz -C /usr/local/bin kubeconform
+echo "The kubeconform command line tool is installed... Done."
+
 echo "Done!"
