@@ -41,29 +41,30 @@ jobs:
 
         kubectl -n flux-system wait gitrepository/flux-system --for=condition=ready --timeout=1m
 
-        flux create kustomization flux-system \
+        flux create kustomization sample-stamp \
         --interval=15m \
         --source=flux-system \
         --path=./clusters/sample-stamp
-        
-    # - name: Verify cluster reconciliation
-    #   run: |
-    #     kubectl -n flux-system wait kustomization/kyverno --for=condition=ready --timeout=1m
-    #     kubectl -n flux-system wait kustomization/kyverno-controller --for=condition=ready --timeout=1m
-    #     kubectl -n flux-system wait kustomization/kyverno-policies --for=condition=ready --timeout=1m
-    # - name: List reconciliations
-    #   run: |
-    #     flux get all --all-namespaces
-    # - name: Debug failure
-    #   if: failure()
-    #   run: |
-    #     kubectl -n flux-system get all
-    #     kubectl -n flux-system logs deploy/source-controller
-    #     kubectl -n flux-system logs deploy/kustomize-controller
-    #     kubectl -n flux-system logs deploy/helm-controller
-    #     kubectl -n flux-system logs deploy/notification-controller
-    #     kubectl -n kyverno get all
-    #     kubectl -n kyverno logs deploy/kyverno
-    #     kubectl get clusterpolicy flux-multi-tenancy -oyaml
-    #     flux get sources all --all-namespaces
-    #     flux get ks --all-namespaces
+
+    - name: Verify cluster reconciliation
+      run: |
+        flux get kustomizations -A
+        kubectl -n flux-system wait kustomization/operations-releases --for=condition=ready --timeout=1m
+        kubectl -n flux-system wait kustomization/operations-manifests --for=condition=ready --timeout=10m
+        kubectl -n flux-system wait kustomization/sample-stamp-config --for=condition=ready --timeout=15m
+    - name: List reconciliations
+      run: |
+        flux get all --all-namespaces
+    - name: Debug failure
+      if: failure()
+      run: |
+        kubectl -n flux-system get all
+        kubectl -n flux-system logs deploy/source-controller
+        kubectl -n flux-system logs deploy/kustomize-controller
+        kubectl -n flux-system logs deploy/helm-controller
+        kubectl -n flux-system logs deploy/notification-controller
+        kubectl -n cert-manager get all
+        kubectl -n istio-system get all
+        kubectl -n sample-stamp get all
+        flux get sources all --all-namespaces
+        flux get ks --all-namespaces
