@@ -28,7 +28,7 @@ jobs:
         apiVersion: source.toolkit.fluxcd.io/v1beta2
         kind: GitRepository
         metadata:
-          name: flux-system
+          name: sample-stamp
           namespace: flux-system
         spec:
           interval: 15m
@@ -43,15 +43,14 @@ jobs:
 
         flux create kustomization sample-stamp \
         --interval=15m \
-        --source=flux-system \
+        --source=sample-stamp \
         --path=./clusters/sample-stamp
 
     - name: Verify cluster reconciliation
       run: |
         flux get kustomizations -A
-        kubectl -n flux-system wait kustomization/operations-releases --for=condition=ready --timeout=10m
+        kubectl -n flux-system wait kustomization/operations-releases --for=condition=ready --timeout=15m
         kubectl -n flux-system wait kustomization/operations-manifests --for=condition=ready --timeout=15m
-        kubectl -n flux-system wait kustomization/sample-stamp-config --for=condition=ready --timeout=15m
     - name: List reconciliations
       run: |
         flux get all --all-namespaces
