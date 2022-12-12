@@ -1,4 +1,5 @@
 # Flux ignore
 .github/
-scripts/
+.devcontainer/
+_scripts/
 *.md

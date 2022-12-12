@@ -1,20 +1,21 @@
 # gitops-sample-stamp
-Gitopos Repo for establishing a multi-tenancy environment.
+[![build](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml/badge.svg)](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/build.yaml)
+[![test](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml/badge.svg)](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml)
+
+
+_This is based on samples from [flux2-multi-tenancy](https://github.com/fluxcd/flux2-multi-tenancy)._
+
+
+This repository serves as a sample for managing a multi-tenant clusters with Git and Flux v2.
+
+## Scenario
+This sample has a single cluster called `sample-stamp` with a multi-tenant pattern for 1 application [gitops-sample-app](https://github.com/danielscholl/gitops-sample-app)
+
 
 ## Prerequisites
-Testing this repo leverages azure arc features and requires the following to be enabled:
 
-```bash
-# Azure CLI Login
-az login
-az account set --subscription <your_subscription>
+A dev container is present in the repo which makes development and testing easier using an ARC enabled KinD cluster.
 
-# Add CLI Extensions
-az extension add --name connectedk8s
-
-# Update CLI Extensions
-az extension update --name connectedk8s
-```
 
 ## Setup and Testing
 
@@ -27,31 +28,18 @@ To make things easy for the purpose of simple validations a `kind` kubernetes cl
 [KinD like AKS](https://www.danielstechblog.io/local-kubernetes-setup-with-kind/)
 
 ```bash
-# Using kind create a Kubernetes Cluster
-CLUSTER_NAME="sample-cluster"
-kind create cluster --name $CLUSTER_NAME
+# Azure CLI Login
+az login
+az account set --subscription <your_subscription>
 
-# Create a Resource Group
-RESOURCE_GROUP="sample-stamp"
-LOCATION="eastus"
-az group create -n $RESOURCE_GROUP -l $LOCATION
-
-# Arc enable the Kubernetes Cluster
-az connectedk8s connect -n $CLUSTER_NAME -g $RESOURCE_GROUP
-
-# Configure Flux Extension
-az k8s-extension create --name flux --extension-type microsoft.flux --configuration-settings multiTenancy.enforce=false \
-  --resource-group $RESOURCE_GROUP \
-  --cluster-name $CLUSTER_NAME --cluster-type connectedClusters
-
-# Deploy Sample Stamp
-az k8s-configuration flux create --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME --cluster-type connectedClusters \
-    --name sample-stamp --scope cluster --namespace flux-system \
-    --kind git --url https://github.com/danielscholl/gitops-sample-stamp \
-    --branch main --kustomization name=config path=./clusters/sample-stamp
+# Deploy the solution
+./_scripts/deploy.sh
+```
 
 
+Workloads can be viewed from the Azure Portal leveraging the ARC workload capability.
+
+```bash
 # Authorize Azure AD User
 CLUSTER_ID=$(az connectedk8s show -n $CLUSTER_NAME -g $RESOURCE_GROUP --query id -o tsv)
 AZURE_USER=$(az ad signed-in-user show --query id -o tsv)

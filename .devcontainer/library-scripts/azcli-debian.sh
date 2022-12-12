@@ -226,4 +226,5 @@ echo "The kubeconform command line tool is installed... Done."
 echo "================================================================================="
 echo "Installing kubectl command."
 az aks install-cli
+
 echo "Done!"
