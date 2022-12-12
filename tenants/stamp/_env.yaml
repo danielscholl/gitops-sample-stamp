@@ -5,6 +5,6 @@ metadata:
 patch: |-
   - op: replace
     path: /spec/path
-    value: ./stamp
+    value: ./app
 target:
   kind: Kustomization
