@@ -1,12 +1,8 @@
 # gitops-sample-stamp
-[![build](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml/badge.svg)](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/build.yaml)
+[![build](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/build.yaml/badge.svg)](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/build.yaml)
 [![test](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml/badge.svg)](https://github.com/danielscholl/gitops-sample-stamp/actions/workflows/test.yaml)
 
-
-_This is based on samples from [flux2-multi-tenancy](https://github.com/fluxcd/flux2-multi-tenancy)._
-
-
-This repository serves as a sample for managing a multi-tenant clusters with Git and Flux v2.
+This repository serves as a sample for managing a multi-tenant clusters with Git and Flux v2 and is based on samples from [flux2-multi-tenancy](https://github.com/fluxcd/flux2-multi-tenancy).
 
 ## Scenario
 This sample has a single cluster called `sample-stamp` with a multi-tenant pattern for 1 application [gitops-sample-app](https://github.com/danielscholl/gitops-sample-app)

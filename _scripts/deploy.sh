@@ -80,7 +80,7 @@ function ArcEnableCluster() {
 
   Verify $1 'CreateKindCluster-ERROR: Argument (CLUSTER_NAME) not received'
   Verify $2 'CreateResourceGroup-ERROR: Argument (RESOURCE_GROUP) not received'
-  
+ 
   local _result=$(az connectedk8s show --name $1 --resource-group $2 2>/dev/null)
 
   if [ "$_result"  == "" ]
@@ -152,7 +152,7 @@ PrintMessage "ARC enable Cluster: $CLUSTER_NAME"
 ArcEnableCluster $CLUSTER_NAME $RESOURCE_GROUP_NAME
 
 PrintMessage "Install Flux: $CLUSTER_NAME"
-InstallFlux  $CLUSTER_NAME $RESOURCE_GROUP_NAME
+InstallFlux $CLUSTER_NAME $RESOURCE_GROUP_NAME
 
 PrintMessage "Load Stamp: $CLUSTER_NAME"
 LoadStamp  $CLUSTER_NAME $RESOURCE_GROUP_NAME
