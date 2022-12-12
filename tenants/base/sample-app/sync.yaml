@@ -8,7 +8,7 @@ spec:
   interval: 1m0s
   url: https://github.com/danielscholl/gitops-sample-app
   ref:
-    branch: main
+    tag: v0.0.1
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization

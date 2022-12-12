@@ -48,22 +48,29 @@ jobs:
         --source=sample-stamp \
         --path=./clusters/sample-stamp
 
-    - name: Verify cluster reconciliation
+    - name: Verify reconciliation kustomizations/operations-releases
       run: |
         flux get kustomizations -A
         kubectl -n flux-system wait kustomization/operations-releases --for=condition=ready --timeout=15m
+
+    - name: Verify reconciliation kustomization/operations-manifests
+      run: |
+        flux get kustomizations -A
         kubectl -n flux-system wait kustomization/operations-manifests --for=condition=ready --timeout=15m
-        kubectl -n flux-system wait kustomization/tenants --for=condition=ready --timeout=15m
-    - name: Verify tenant reconciliation
+
+    - name: Verify reconciliation kustomization/tenants
       run: |
         flux get kustomizations -A
         kubectl -n flux-system wait kustomization/tenants --for=condition=ready --timeout=15m
-    # - name: List reconciliations
-    #   run: |
-    #     flux get all --all-namespaces
-    # - name: List Tenant Application
-    #   run: |
-    #     kubectl -n sample-stamp get all
+
+    - name: List reconciliations
+      run: |
+        flux get all --all-namespaces
+
+    - name: List Tenant Application Objectxs
+      run: |
+        kubectl -n sample-app get all
+
     - name: Debug failure
       if: failure()
       run: |
