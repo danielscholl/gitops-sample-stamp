@@ -26,6 +26,7 @@ spec:
   servers:
   - hosts:
     - "kiali.sample.stamp"
+    - "app.sample.stamp"
     port:
       name: http
       number: 80
@@ -34,6 +35,7 @@ spec:
       httpsRedirect: true
   - hosts:
     - "kiali.sample.stamp"
+    - "app.sample.stamp"
     port:
       number: 443
       name: https
