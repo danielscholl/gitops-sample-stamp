@@ -83,5 +83,3 @@ This validation step can also be run manually with the script `_scripts/validate
 __Test__
 
 Whenever a pull request or merge to main is submitted the Test action is run. This action performs an end to end integration testing using a KinD cluster as part of the pipeline.  The validation step will ensure that the kustomizations are reconciled successfully.
-
-> The tenant solutions are not applied by the integration test and skipped.
