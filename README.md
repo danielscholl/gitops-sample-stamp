@@ -12,6 +12,12 @@ This sample has a single cluster called `sample-stamp` with a multi-tenant patte
 
 A dev container is present in the repo which makes development and testing easier using an ARC enabled KinD cluster.
 
+The following az extensions are required to run the deployment and are available in the Development Container
+
+- [connectedk8s](https://learn.microsoft.com/en-us/cli/azure/connectedk8s?view=azure-cli-latest)
+- [k8s-extension](https://learn.microsoft.com/en-us/cli/azure/k8s-extension?view=azure-cli-latest)
+- [k8s-configuration](https://learn.microsoft.com/en-us/cli/azure/k8s-configuration?view=azure-cli-latest)
+
 
 ## Setup and Testing
 
@@ -33,7 +39,7 @@ az account set --subscription <your_subscription>
 ```
 
 
-Workloads can be viewed from the Azure Portal leveraging the ARC workload capability.
+Workloads can be viewed from within the Azure Portal by leveraging the ARC workload capability.
 
 ```bash
 # Authorize Azure AD User
@@ -62,3 +68,20 @@ EOF
 TOKEN=$(kubectl get secret azure-user-secret -o jsonpath='{$.data.token}' | base64 -d | sed 's/$/\n/g')
 echo $TOKEN
 ```
+
+## Pipelines
+
+Two CI workflows are leveraged in this repo to test the software configuration.
+
+__Build__
+
+Whenever a pull request or merge to main is submitted the Build action is run. This action performs a validation on the format of the yaml using `yq` as well as validating the kubernetes manifests using `kubeconform`.
+
+This validation step can also be run manually with the script `_scripts/validate.sh`.
+
+
+__Test__
+
+Whenever a pull request or merge to main is submitted the Test action is run. This action performs an end to end integration testing using a KinD cluster as part of the pipeline.  The validation step will ensure that the kustomizations are reconciled successfully.
+
+> The tenant solutions are not applied by the integration test and skipped.
