@@ -67,7 +67,25 @@ function CreateKindCluster() {
   local _result=$(kind get clusters |grep $1 2>/dev/null)
   if [ "$_result"  == "" ]
     then
-      kind create cluster --name $1
+      cat <<EOF | kind create cluster --name $1 --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
       PrintMessage "  Kind Cluster Created."
     else
       PrintMessage "  Kind Cluster: $1 --> Already exists."
@@ -80,7 +98,7 @@ function ArcEnableCluster() {
 
   Verify $1 'CreateKindCluster-ERROR: Argument (CLUSTER_NAME) not received'
   Verify $2 'CreateResourceGroup-ERROR: Argument (RESOURCE_GROUP) not received'
- 
+
   local _result=$(az connectedk8s show --name $1 --resource-group $2 2>/dev/null)
 
   if [ "$_result"  == "" ]
